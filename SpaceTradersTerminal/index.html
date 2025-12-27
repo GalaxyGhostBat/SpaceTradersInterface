@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROBCO TERMLINK // SPACETRADERS v2</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛸</text></svg>">
+</head>
+<body>
+    <div class="crt-screen">
+        <!-- Screen glow effect -->
+        <div class="screen-glow"></div>
+
+        <!-- CRT Bezel -->
+        <div class="bezel">
+            <!-- Main terminal content -->
+            <div class="terminal">
+                <!-- Scanlines overlay -->
+                <div class="scanlines"></div>
+
+                <!-- Terminal content -->
+                <div id="output" class="terminal-output">
+                    <!-- Boot sequence will populate here -->
+                </div>
+
+                <!-- Input line -->
+                <div class="terminal-input-line">
+                    <span class="prompt">$></span>
+                    <input type="text"
+                           id="command-input"
+                           autocomplete="off"
+                           spellcheck="false"
+                           placeholder="TYPE 'help' FOR COMMANDS" />
+                    <div id="cursor" class="blinking-cursor">█</div>
+                </div>
+
+                <!-- Status bar -->
+                <div class="status-bar">
+                    <span id="connection-status" class="status-offline">● OFFLINE</span>
+                    <span id="agent-status">AGENT: --</span>
+                    <span id="credits-status">CREDITS: Ƶ--</span>
+                    <span id="timestamp">00:00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Physical terminal labels -->
+        <div class="terminal-label">
+            <span class="label-text">ROBCO INDUSTRIES (TM) TERMLINK</span>
+            <span class="label-text">MODEL: ST-V2</span>
+            <span class="label-text">SERIAL: 42-667-951</span>
+        </div>
+
+        <!-- "On/Off" switch (visual) -->
+        <div class="power-switch">
+            <div class="switch-knob"></div>
+            <span class="switch-label">POWER</span>
+        </div>
+    </div>
+
+    <!-- Sound for typing (hidden audio element) -->
+    <audio id="typeSound" preload="auto">
+        <source src="assets/sounds/keyclick.wav" type="audio/wav">
+    </audio>
+
+    <!-- Load scripts -->
+    <script type="module" src="script.js"></script>
+
+    <!-- Quick connection test (optional, can be removed) -->
+    <script type="module">
+        // This will be called from script.js after boot sequence
+        window.manualApiTest = async function (token) {
+            const apiModule = await import('./api/spacetraders.js');
+            const api = new apiModule.SpaceTradersAPI(token);
+            try {
+                const status = await api.getStatus();
+                console.log('🔌 API Connection Test:', status);
+                return true;
+            } catch (err) {
+                console.error('❌ Connection Failed:', err);
+                return false;
+            }
+        };
+    </script>
+</body>
+</html>
